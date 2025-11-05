@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Bloomify.Models.Product>
+
+<div class="filter-sort-container">
+    <form method="get" class="mb-4 row">
+        <div class="col-md-4">
+            <label>Category</label>
+            <select name="category" class="form-control">
+                <option value="">All</option>
+                @foreach (var cat in ViewBag.Categories)
+                {
+                    <option value="@cat.CategoryName">@cat.CategoryName</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label>Sort by</label>
+            <select name="sort" class="form-control">
+                <option value="">Default</option>
+                <option value="price_asc">Price: Low to High</option>
+                <option value="price_desc">Price: High to Low</option>
+                <option value="name_asc">Name: A-Z</option>
+                <option value="name_desc">Name: Z-A</option>
+            </select>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Apply</button>
+        </div>
+    </form>
+</div>
+
+
+<div class="product-list">
+    @foreach (var product in Model)
+    {
+        <div class="product-card">
+            <a href="@Url.Action("Product", "Store", new { id = product.ProductID })">
+                <img src="@product.ImagePath" alt="@product.ProductName" class="product-image-card" />
+            </a>
+            <div class="product-details">
+                <h3>@product.ProductName</h3>
+                <p class="product-price">@string.Format("${0:0.00}", product.Price)</p>
+                <form asp-action="AddToCart" asp-controller="ShoppingCart" method="post">
+                    <input type="hidden" name="productId" value="@product.ProductID" />
+                    <input type="hidden" name="quantity" value="1" />
+                    <button type="submit" class="btn btn-success w-100">Add to Cart</button>
+                </form>
+            </div>
+        </div>
+    }
+</div>

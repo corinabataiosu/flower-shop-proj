@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "Homepage";
+}
+
+<div class="main-wrapper">
+    <!-- main content -->
+    <section class="text-center">
+        <img src="~/images/flowers.png" alt="Beautiful flowers" class="img-fluid hero-image">
+    </section>
+
+    <!-- cards -->
+    <section class="features py-5">
+        <div class="container-fluid">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h3>Same Day Delivery</h3>
+                        <p>Order by 1 PM for same-day flower delivery</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3>Handcrafted</h3>
+                        <p>Every arrangement is made with love by local florists</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3>Fresh Guarantee</h3>
+                        <p>Our flowers stay fresh for at least 7 days</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- support local -->
+    <section class="homepage-details py-5 container-fluid">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <img src="~/images/workers.png" alt="Our team" class="img-fluid rounded shadow">
+                </div>
+                <div class="col-lg-6 text-center text-lg-start px-4 py-5">
+                    <h2 class="display-5 fw-bold mb-3">Support local.<br>Celebrate love.</h2>
+                    <p class="lead mb-4">Each arrangement is a one-of-a-kind creation by local florists. When you order from Bloomify, you receive fresh, hand-crafted bouquets that reflect the skill and passion of your community's experts—delivered with care and attention to detail.</p>
+                    <a class="btn d-flex justify-content-center" asp-controller="Store" asp-action="Index">See products</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- banner -->
+    <div class="contact-banner text-center container-fluid">
+        <div class="container-fluid">
+            <h1>Bloomify - Fresh Flowers, Endless Smiles!</h1>
+        </div>
+    </div>
+
+    <!-- memories -->
+    <section class="homepage-details py-5 container-fluid">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-lg-6 order-lg-2">
+                    <img src="~/images/bouquet.jpeg" alt="Bouquet" class="img-fluid rounded shadow">
+                </div>
+                <div class="col-lg-6 order-lg-1 text-center text-lg-start px-4 py-5">
+                    <h2 class="display-5 fw-bold mb-3">Turn flowers into memories.</h2>
+                    <p class="lead mb-4">Want to make your flowers even more special? Add a personal touch with a unique card message! Just include your heartfelt message at checkout. It's a simple and fun way to make your floral gift truly memorable. For more information, contact our team.</p>
+                    <a class="btn d-flex justify-content-center" asp-controller="Home" asp-action="About">Contact us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

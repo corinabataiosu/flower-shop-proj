@@ -1,0 +1,76 @@
+﻿@model Bloomify.Models.Product
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Product Details</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        <dl class="row">
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.ProductName)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.ProductName)
+            </dd>
+
+            <dt class="col-sm-4 font-weight-bold">
+                @Html.DisplayNameFor(model => model.ProductDescription)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.ProductDescription)
+            </dd>
+
+            <dt class="col-sm-4 font-weight-bold">
+                @Html.DisplayNameFor(model => model.Price)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Price)
+            </dd>
+
+            <dt class="col-sm-4 font-weight-bold">
+                @Html.DisplayNameFor(model => model.ImagePath)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.ImagePath)
+            </dd>
+
+            <dt class="col-sm-4 font-weight-bold">
+                @Html.DisplayNameFor(model => model.Categories)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Categories.CategoryName)
+            </dd>
+
+            <dt class="col-sm-4 font-weight-bold">
+                @Html.DisplayNameFor(model => model.Providers)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Providers.ProviderName)
+            </dd>
+        </dl>
+    </div>
+
+    <div class="col-md-4">
+        @if (!string.IsNullOrEmpty(Model.ImagePath))
+        {
+            <div class="border p-2" style="width: 100%; max-width: 200px;">
+                <img src="~/@Model.ImagePath" alt="Product Image" class="img-fluid" />
+            </div>
+        }
+        else
+        {
+            <p>No image available.</p>
+        }
+    </div>
+</div>
+<hr />
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.ProductID" class="btn">Edit</a>
+    <a asp-action="Index" class="btn">Back to List</a>
+</div>

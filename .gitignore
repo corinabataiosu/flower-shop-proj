@@ -1,0 +1,14 @@
+# Git ignore rules 
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.vscode/
+bin/
+obj/
+[Bb]uild/
+[Ll]ogs/
+*.log
+*.dbmdl
+*.jfm
+_ReSharper*/
