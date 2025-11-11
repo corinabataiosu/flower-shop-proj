@@ -116,11 +116,8 @@ namespace Bloomify.Repositories
 
         public IEnumerable<ShoppingCartItem> GetCartItemsByUserId(int userId)
         {
-            return _context.ShoppingCartItems
-                .Include(i => i.Products)
-                .Include(i => i.ShoppingCarts)
-                .Where(i => i.ShoppingCarts.Users.UserID == userId)
-                .ToList();
+            var cart = GetShoppingCartByUserID(userId);
+            return cart?.ShoppingCartItems ?? new List<ShoppingCartItem>();
         }
     }
 }

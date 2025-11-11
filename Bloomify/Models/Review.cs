@@ -12,6 +12,6 @@ namespace Bloomify.Models
         public Product? Products { get; set; }
 
         public int UserID { get; set; }
-        public User? Users { get; set; }
+        public BloomifyUser? Users { get; set; }
     }
 }

@@ -1,9 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Bloomify.Models;
 
 namespace Bloomify.Data
 {
-    public class AppDbContext : DbContext
+    // Make sure this inherits correctly from the base IdentityDbContext class
+    public class AppDbContext : IdentityDbContext<BloomifyUser, IdentityRole<int>, int,
+                                                 IdentityUserClaim<int>, IdentityUserRole<int>,
+                                                 IdentityUserLogin<int>, IdentityRoleClaim<int>,
+                                                 IdentityUserToken<int>>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -16,12 +22,44 @@ namespace Bloomify.Data
         public DbSet<Provider> Providers { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<ShippingDetail> ShippingDetails { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
 
+        // Reference to old User table for migration purposes
+        // Remove this after migration is complete
+        public DbSet<BloomifyUser> Users { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // This needs to be called first to set up the ASP.NET Identity tables
+            base.OnModelCreating(modelBuilder);
+
+            // Configure relationships for Identity-related entities
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Users)
+                .WithMany(u => u.Orders)
+                .HasForeignKey(o => o.userID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Users)
+                .WithMany(u => u.Reviews)
+                .HasForeignKey(r => r.UserID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Products)
+                .WithMany(p => p.Reviews)
+                .HasForeignKey(r => r.ProductID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ShoppingCart>()
+                .HasOne(sc => sc.Users)
+                .WithMany()
+                .HasForeignKey(sc => sc.userID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Seed data
             modelBuilder.Entity<Category>().HasData(
                 new Category { CategoryID = 1, CategoryName = "Flowers" },
                 new Category { CategoryID = 2, CategoryName = "Sweets" }
@@ -38,12 +76,6 @@ namespace Bloomify.Data
                 new Product { ProductID = 1, ProductName = "Trandafir Roșu", Price = 15, CategoryID = 1, ImagePath = "path1", ProductDescription = "description 1", ProviderID = 1 },
                 new Product { ProductID = 2, ProductName = "Lalea Galbenă", Price = 10, CategoryID = 2, ImagePath = "path2", ProductDescription = "description 2", ProviderID = 2 }
             );
-
-            modelBuilder.Entity<User>().HasData(
-                new User { UserID = 1, Email = "test1@example.com", Password = "test", Name = "Test User 1", Address = "address", PhoneNumber = "0711111111"},
-                new User { UserID = 2, Email = "test2@example.com", Password = "test", Name = "Test User 2", Address = "address", PhoneNumber = "0711111111" }
-            );
         }
-
     }
 }

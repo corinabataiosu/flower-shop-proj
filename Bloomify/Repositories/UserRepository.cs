@@ -1,42 +1,67 @@
 ﻿using Bloomify.Models;
 using Bloomify.Repositories.Interfaces;
-using Bloomify.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Bloomify.Repositories
 {
-    public class UserRepository :  RepositoryBase<User>, IUserRepository
+    public class UserRepository : IUserRepository
     {
-        public UserRepository(AppDbContext repositoryContext)
-            : base(repositoryContext)
+        private readonly UserManager<BloomifyUser> _userManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
+
+        public UserRepository(UserManager<BloomifyUser> userManager,
+                              RoleManager<IdentityRole<int>> roleManager)
         {
-        }
-        public User GetUserByEmail(string email)
-        {
-            return _context.Users
-                .FirstOrDefault(u => u.Email == email);
-        }
-        public void AddUser(User user)
-        {
-            Create(user);
-        }
-        public void UpdateUser(User user)
-        {
-            Update(user);
-        }
-        public void DeleteUser(User user)
-        {
-            Delete(user);
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
-        public User GetUserByID(int id)
+        public BloomifyUser GetUserByEmail(string email)
         {
-            return _context.Users
-                .FirstOrDefault(u => u.UserID == id);
+            return _userManager.FindByEmailAsync(email).GetAwaiter().GetResult();
         }
 
-        public IEnumerable<User> GetAll()
+        public BloomifyUser GetUserById(int id)
         {
-            return _context.Users.ToList();
+            return _userManager.FindByIdAsync(id.ToString()).GetAwaiter().GetResult();
+        }
+
+        public IEnumerable<BloomifyUser> GetAllUsers()
+        {
+            return _userManager.Users.ToList();
+        }
+
+        public IdentityResult CreateUser(BloomifyUser user, string password)
+        {
+            return _userManager.CreateAsync(user, password).GetAwaiter().GetResult();
+        }
+
+        public IdentityResult UpdateUser(BloomifyUser user)
+        {
+            return _userManager.UpdateAsync(user).GetAwaiter().GetResult();
+        }
+
+        public IdentityResult DeleteUser(BloomifyUser user)
+        {
+            return _userManager.DeleteAsync(user).GetAwaiter().GetResult();
+        }
+
+        public IdentityResult AddToRole(BloomifyUser user, string role)
+        {
+            return _userManager.AddToRoleAsync(user, role).GetAwaiter().GetResult();
+        }
+
+        public IdentityResult RemoveFromRole(BloomifyUser user, string role)
+        {
+            return _userManager.RemoveFromRoleAsync(user, role).GetAwaiter().GetResult();
+        }
+
+        public IList<string> GetUserRoles(BloomifyUser user)
+        {
+            return _userManager.GetRolesAsync(user).GetAwaiter().GetResult();
         }
     }
 }

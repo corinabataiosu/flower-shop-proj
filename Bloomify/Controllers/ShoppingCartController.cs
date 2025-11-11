@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Bloomify.Models;
+using Bloomify.Data;
+using Bloomify.Services;
 using Bloomify.Services.Interfaces;
 using System.Security.Claims;
+using Bloomify.Repositories;
 using Bloomify.Repositories.Interfaces;
 using System;
 using Microsoft.EntityFrameworkCore;
-using Bloomify.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Bloomify.Controllers
 {
@@ -15,15 +19,18 @@ namespace Bloomify.Controllers
         private readonly IProductService _productService;
         private readonly IUserService _userService;
         private readonly IOrderService _orderService;
+        private readonly UserManager<BloomifyUser> _userManager;
 
-        public ShoppingCartController(IShoppingCartService shoppingCartService, IProductService productService, IRepositoryWrapper repositoryWrapper, IUserService userService, IOrderService orderService)
+        public ShoppingCartController(IShoppingCartService shoppingCartService, IProductService productService, IRepositoryWrapper repositoryWrapper, IUserService userService, IOrderService orderService, UserManager<BloomifyUser> userManager)
         {
             _shoppingCartService = shoppingCartService;
             _productService = productService;
             _userService = userService;
             _orderService = orderService;
+            _userManager = userManager;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             var userId = 1;
@@ -40,6 +47,7 @@ namespace Bloomify.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult AddToCart(int productId, int quantity = 1)
         {
             var userId = 1;
@@ -69,6 +77,7 @@ namespace Bloomify.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult RemoveFromCart(int itemId)
         {
             var cart = _shoppingCartService.GetShoppingCartByUserID(1);
@@ -87,6 +96,7 @@ namespace Bloomify.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult ClearCart()
         {
             var userId = 1;
@@ -97,6 +107,7 @@ namespace Bloomify.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult UpdateQuantity(int itemId, string action)
         {
             var userId = 1;
@@ -117,6 +128,7 @@ namespace Bloomify.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Checkout()
         {
             var user = _userService.GetCurrentUser();
@@ -144,6 +156,7 @@ namespace Bloomify.Controllers
 
 
         [HttpPost]
+        [Authorize]
         public IActionResult Checkout(ShippingDetail shippingDetail)
         {
             var user = _userService.GetCurrentUser();
@@ -161,7 +174,7 @@ namespace Bloomify.Controllers
 
             var order = new Order
             {
-                userID = user.UserID,
+                userID = user.Id,
                 Status = "Pending",
                 TotalPrice = cartItems.Sum(item => item.Products.Price * item.Quantity),
                 OrderItems = cartItems.Select(item => new OrderItem
@@ -180,6 +193,7 @@ namespace Bloomify.Controllers
             return RedirectToAction("OrderConfirmation", new { id = order.OrderID });
         }
 
+        [Authorize]
         public IActionResult OrderConfirmation(int id)
         {
             var order = _orderService.GetOrderById(id);
@@ -191,5 +205,16 @@ namespace Bloomify.Controllers
             return View(order);
         }
 
+        private int GetCurrentUserId()
+        {
+            if (User?.Identity?.IsAuthenticated != true)
+                return 0;
+
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdClaim))
+                return 0;
+
+            return int.TryParse(userIdClaim, out int userId) ? userId : 0;
+        }
     }
 }

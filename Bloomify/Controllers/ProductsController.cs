@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bloomify.Models;
 using Bloomify.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Bloomify.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProductsController : Controller
     {
         private readonly IProductService _productService;

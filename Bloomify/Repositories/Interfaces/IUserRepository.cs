@@ -1,14 +1,19 @@
 ﻿using Bloomify.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace Bloomify.Repositories.Interfaces
 {
-    public interface IUserRepository : IRepositoryBase<User>
+    public interface IUserRepository
     {
-        User GetUserByEmail(string email);
-        User GetUserByID(int id);
-        IEnumerable<User> GetAll();
-        void AddUser(User user);
-        void UpdateUser(User user);
-        void DeleteUser(User user);
+        BloomifyUser GetUserByEmail(string email);
+        BloomifyUser GetUserById(int id);
+        IEnumerable<BloomifyUser> GetAllUsers();
+        IdentityResult CreateUser(BloomifyUser user, string password);
+        IdentityResult UpdateUser(BloomifyUser user);
+        IdentityResult DeleteUser(BloomifyUser user);
+        IdentityResult AddToRole(BloomifyUser user, string role);
+        IdentityResult RemoveFromRole(BloomifyUser user, string role);
+        IList<string> GetUserRoles(BloomifyUser user);
     }
 }

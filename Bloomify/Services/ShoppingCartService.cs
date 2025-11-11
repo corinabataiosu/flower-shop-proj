@@ -125,7 +125,7 @@ namespace Bloomify.Services
                 return new List<ShoppingCartItem>();
             }
 
-            return _shoppingCartRepository.GetCartItemsByUserId(user.UserID);
+            return _shoppingCartRepository.GetCartItemsByUserId(user.Id);
         }
 
         public void Update(ShoppingCartItem item)

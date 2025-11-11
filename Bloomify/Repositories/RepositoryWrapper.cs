@@ -1,5 +1,7 @@
 ﻿using Bloomify.Repositories.Interfaces;
 using Bloomify.Data;
+using Microsoft.AspNetCore.Identity;
+using Bloomify.Models;
 
 namespace Bloomify.Repositories
 {
@@ -16,10 +18,16 @@ namespace Bloomify.Repositories
         private IShoppingCartRepository _shoppingCart;
         private IShoppingCartItemRepository _shoppingCartItem;
         private IUserRepository _user;
+        private readonly UserManager<BloomifyUser> _userManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
 
-        public RepositoryWrapper(AppDbContext context)
+        public RepositoryWrapper(AppDbContext repositoryContext,
+            UserManager<BloomifyUser> userManager,
+            RoleManager<IdentityRole<int>> roleManager)
         {
-            _context = context;
+            _context = repositoryContext;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
         public IProductRepository ProductRepository
         {
@@ -132,7 +140,7 @@ namespace Bloomify.Repositories
             {
                 if (_user == null)
                 {
-                    _user = new UserRepository(_context);
+                    _user = new UserRepository(_userManager, _roleManager);
                 }
                 return _user;
             }

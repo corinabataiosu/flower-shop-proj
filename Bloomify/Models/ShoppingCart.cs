@@ -8,7 +8,7 @@ namespace Bloomify.Models
         public float TotalPrice { get; set; }
 
         public int userID { get; set; }
-        public User? Users { get; set; }
+        public BloomifyUser? Users { get; set; }
 
         public ICollection<ShoppingCartItem>? ShoppingCartItems { get; set; }
     }
