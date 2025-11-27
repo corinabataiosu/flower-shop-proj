@@ -33,10 +33,9 @@ namespace Bloomify.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            var userId = 1;
-            //var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var userId = GetCurrentUserId();
             if (userId == 0)
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account", new { area = "Identity" });
 
             var cart = _shoppingCartService.GetShoppingCartByUserID(userId);
             if (cart == null)
@@ -50,10 +49,9 @@ namespace Bloomify.Controllers
         [Authorize]
         public IActionResult AddToCart(int productId, int quantity = 1)
         {
-            var userId = 1;
-            //var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var userId = GetCurrentUserId();
             if (userId == 0)
-                return RedirectToAction("Login", "Account"); // fallback în caz de anonimi
+                return RedirectToAction("Login", "Account", new { area = "Identity" });
 
             var cart = _shoppingCartService.GetShoppingCartByUserID(userId);
             if (cart == null)
@@ -80,9 +78,8 @@ namespace Bloomify.Controllers
         [Authorize]
         public IActionResult RemoveFromCart(int itemId)
         {
-            var cart = _shoppingCartService.GetShoppingCartByUserID(1);
-            //var cart = _shoppingCartService.GetShoppingCartByUserID(
-              //  int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0"));
+            var userId = GetCurrentUserId();
+            var cart = _shoppingCartService.GetShoppingCartByUserID(userId);
 
             var item = cart?.ShoppingCartItems?.FirstOrDefault(i => i.ShoppingCartItemID == itemId);
             if (item != null)
@@ -99,8 +96,7 @@ namespace Bloomify.Controllers
         [Authorize]
         public IActionResult ClearCart()
         {
-            var userId = 1;
-            //var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var userId = GetCurrentUserId();
             _shoppingCartService.ClearShoppingCart(userId);
             return Redirect(Request.Headers["Referer"].ToString());
             //return RedirectToAction("Index");
@@ -110,7 +106,7 @@ namespace Bloomify.Controllers
         [Authorize]
         public IActionResult UpdateQuantity(int itemId, string action)
         {
-            var userId = 1;
+            var userId = GetCurrentUserId();
             var cart = _shoppingCartService.GetShoppingCartByUserID(userId);
             var item = cart?.ShoppingCartItems?.FirstOrDefault(i => i.ShoppingCartItemID == itemId);
 
@@ -131,10 +127,10 @@ namespace Bloomify.Controllers
         [Authorize]
         public IActionResult Checkout()
         {
-            var user = _userService.GetCurrentUser();
+            var user = _userManager.GetUserAsync(User).Result;
             if (user == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account", new { area = "Identity" });
             }
 
             var cartItems = _shoppingCartService.GetCartItems();
@@ -159,10 +155,11 @@ namespace Bloomify.Controllers
         [Authorize]
         public IActionResult Checkout(ShippingDetail shippingDetail)
         {
-            var user = _userService.GetCurrentUser();
+            var userId = GetCurrentUserId();
+            var user = _userManager.FindByIdAsync(userId.ToString()).Result;
             if (user == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account", new { area = "Identity" });
             }
 
             var cartItems = _shoppingCartService.GetCartItems(); 

@@ -34,11 +34,6 @@ namespace Bloomify.Controllers
                 products = products.Where(p => p.Categories != null && p.Categories.CategoryName == category).ToList();
             }
 
-            if (!string.IsNullOrEmpty(provider))
-            {
-                products = products.Where(p => p.Providers != null && p.Providers.ProviderName == provider).ToList();
-            }
-
             products = sort switch
             {
                 "price_asc" => products.OrderBy(p => p.Price).ToList(),
