@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <h1 class="text-danger">@ViewData["Title"]</h1>
+            <p class="lead">You do not have access to this resource.</p>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Return to Home</a>
+        </div>
+    </div>
+</div> 

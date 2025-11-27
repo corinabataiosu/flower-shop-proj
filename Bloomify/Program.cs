@@ -61,6 +61,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IProviderService, ProviderService>();
 
 builder.Services.AddControllersWithViews();

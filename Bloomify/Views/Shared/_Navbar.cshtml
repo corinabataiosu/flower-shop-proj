@@ -1,5 +1,9 @@
 ﻿@* Views/Shared/_Navbar.cshtml *@
 
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<Bloomify.Models.BloomifyUser> UserManager
+@inject SignInManager<Bloomify.Models.BloomifyUser> SignInManager
+
 <header>
     <!-- navbar -->
     <nav class="navbar navbar-expand-lg px-3 shadow fixed-top">
@@ -42,9 +46,28 @@
                     <a asp-controller="ShoppingCart" asp-action="Index" class="text-dark me-3 position-relative">
                         <i class="fas fa-shopping-cart"></i>
                     </a>
-                    <a asp-controller="Profile" asp-action="Index" class="text-dark me-2">
-                        <i class="fas fa-user"></i>
-                    </a>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        var user = await UserManager.GetUserAsync(User);
+                        if (user != null && !string.IsNullOrEmpty(user.ProfileImagePath))
+                        {
+                            <a asp-controller="Profile" asp-action="Index" class="text-dark me-2">
+                                <img src="@user.ProfileImagePath" alt="Profile" style="width: 36px; height: 36px; object-fit: cover; border-radius: 50%; border: 2px solid #888;" />
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Profile" asp-action="Index" class="text-dark me-2">
+                                <i class="fas fa-user-circle" style="font-size: 36px; color: #888;"></i>
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <a asp-area="Identity" asp-page="/Account/Login" class="text-dark me-2">
+                            <i class="fas fa-user-circle" style="font-size: 36px; color: #888;"></i>
+                        </a>
+                    }
                 </div>
             </div>
         </div>

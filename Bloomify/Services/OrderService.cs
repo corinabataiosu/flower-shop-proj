@@ -30,5 +30,25 @@ namespace Bloomify.Services
             return _repositoryWrapper.OrderRepository.GetOrderByOrderID(orderId);
         }
 
+        public IEnumerable<Order> GetAllOrders()
+        {
+            return _repositoryWrapper.OrderRepository.GetAllOrders();
+        }
+
+        public void MarkOrderAsReceived(int orderId)
+        {
+            var order = GetOrderById(orderId);
+            if (order != null)
+            {
+                order.Status = "delivered";
+                _repositoryWrapper.OrderRepository.Update(order);
+                _repositoryWrapper.Save();
+            }
+        }
+        public void UpdateOrder(Order order)
+        {
+            _repositoryWrapper.OrderRepository.Update(order);
+            _repositoryWrapper.Save();
+        }
     }
 }

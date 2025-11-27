@@ -1,0 +1,126 @@
+﻿@model Bloomify.Models.BloomifyUser
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="container my-5">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h4 class="card-title">Personal Information</h4>
+                    <hr />
+                    <div class="mb-4">
+                        @if (!string.IsNullOrEmpty(Model.ProfileImagePath))
+                        {
+                            <img src="@Model.ProfileImagePath" alt="Profile Image" style="width: 160px; height: 160px; object-fit: cover; border-radius: 50%; border: 3px solid #ccc;" />
+                        }
+                        else
+                        {
+                            <i class="bi bi-person-circle" style="font-size: 160px; color: #ccc;"></i>
+                        }
+                    </div>
+
+                    <div class="text-start">
+                        <div class="row mb-3">
+                            <div class="col-sm-4">
+                                <strong>Name:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                @Model.Name
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-4">
+                                <strong>Email:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                @Model.Email
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-4">
+                                <strong>Phone Number:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                @(Model.PhoneNumber ?? "Not set")
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-4">
+                                <strong>Address:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                @(Model.Address ?? "Not set")
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+                    <div class="d-flex justify-content-center gap-2 mt-4">
+                        <a asp-action="Edit" class="btn btn-danger">Edit Profile</a>
+                        <form asp-controller="MyAccount" asp-action="Logout" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-danger">Logout</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Your Orders</h4>
+                    <hr />
+                    @if (ViewBag.Orders != null && ((IEnumerable<Bloomify.Models.Order>)ViewBag.Orders).Any())
+                    {
+                        <table class="table table-bordered table-striped mt-2">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Total Price</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in (IEnumerable<Bloomify.Models.Order>)ViewBag.Orders)
+                                {
+                                    <tr>
+                                        <td>@order.OrderID</td>
+                                        <td>@order.TotalPrice.ToString("0.00")</td>
+                                        <td><span class="badge bg-info">@order.Status</span></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="alert alert-light">No orders found.</div>
+                    }
+
+                    @if (ViewBag.IsAdmin == true)
+                    {
+                        <hr />
+                        <div class="d-flex gap-2 mb-3">
+                            <a asp-controller="Admin" asp-action="Users" class="btn btn-outline-primary">Users</a>
+                            <a asp-controller="Admin" asp-action="AllOrders" class="btn btn-outline-secondary">All Orders</a>
+                            <a href="/Products" class="btn btn-outline-info">Product Management</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

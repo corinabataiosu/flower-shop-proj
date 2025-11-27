@@ -30,37 +30,4 @@
             </form>
         </div>
     </div>
-
-    <hr class="my-5" />
-
-    <div class="product-reviews">
-        <h3 class="mb-4">Reviews:</h3>
-
-        @if (reviews != null && reviews.Any())
-        {
-            <div class="row">
-                @foreach (var review in reviews)
-                {
-                    <div class="col-md-6 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between mb-2">
-                                    <h5 class="card-title mb-0">@review.Users?.Name</h5>
-                                    <span class="badge bg-secondary">Rating: @review.Rating/5</span>
-                                </div>
-                                <p class="card-text">@review.Comment</p>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
-        else
-        {
-            <div class="alert alert-light text-center p-4">
-                <i class="fas fa-comment-slash fa-2x mb-3"></i>
-                <p class="mb-0">This product doesn't have any reviews yet.</p>
-            </div>
-        }
-    </div>
 </div>

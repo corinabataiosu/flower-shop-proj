@@ -25,5 +25,15 @@ namespace Bloomify.Repositories
         {
             return _context.Orders.Where(o => o.userID == userID).ToList();
         }
+
+        public IEnumerable<Order> GetAllOrders()
+        {
+            return _context.Orders
+                .Include(o => o.Users)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Products)
+                .Include(o => o.ShippingDetails)
+                .ToList();
+        }
     }
 }

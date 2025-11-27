@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Bloomify.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class ProductsController : Controller
     {
         private readonly IProductService _productService;
@@ -33,6 +32,7 @@ namespace Bloomify.Controllers
             return View(products);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Details(int id)
         {
             var product = _productService.GetProductById(id);
@@ -44,6 +44,7 @@ namespace Bloomify.Controllers
         }
 
         // GET: Products/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["CategoryID"] = new SelectList(_categoryService.GetAllCategories(), "CategoryID", "CategoryName");
@@ -56,6 +57,7 @@ namespace Bloomify.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create([Bind("ProductID,ProductName,ProductDescription,Price,ImagePath,CategoryID,ProviderID")] Product product)
         {
             if (ModelState.IsValid)
@@ -69,6 +71,7 @@ namespace Bloomify.Controllers
         }
 
         // GET: Products/Edit/5
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(int id) {
             var product = _productService.GetProductById(id);
             if (product == null)
@@ -85,6 +88,7 @@ namespace Bloomify.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(int id, [Bind("ProductID,ProductName,ProductDescription,Price,ImagePath,CategoryID,ProviderID")] Product product)
         {
             if (ModelState.IsValid)
@@ -98,6 +102,7 @@ namespace Bloomify.Controllers
         }
 
         // GET: Products/Delete/5
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             var product = _productService.GetProductById(id);
@@ -111,6 +116,7 @@ namespace Bloomify.Controllers
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteConfirmed(int id)
         {
             _productService.DeleteProduct(id);
