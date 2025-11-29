@@ -81,10 +81,41 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
+                    <h4>Your Orders</h4>
+                    <hr />
+                    @if (ViewBag.Orders != null && ((IEnumerable<Bloomify.Models.Order>)ViewBag.Orders).Any())
+                    {
+                        <table class="table table-bordered table-striped mt-2">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Total Price</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in (IEnumerable<Bloomify.Models.Order>)ViewBag.Orders)
+                                {
+                                    <tr>
+                                        <td>@order.OrderID</td>
+                                        <td>@order.TotalPrice.ToString("0.00")</td>
+                                        <td><span class="badge bg-info">@order.Status</span></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="alert alert-light">No orders found.</div>
+                    }
+
                     @if (ViewBag.IsAdmin == true)
                     {
                         <hr />
                         <div class="d-flex gap-2 mb-3">
+                            <a asp-controller="Admin" asp-action="Users" class="btn btn-outline-primary">Users</a>
+                            <a asp-controller="Admin" asp-action="AllOrders" class="btn btn-outline-secondary">All Orders</a>
                             <a href="/Products" class="btn btn-outline-info">Product Management</a>
                         </div>
                     }
