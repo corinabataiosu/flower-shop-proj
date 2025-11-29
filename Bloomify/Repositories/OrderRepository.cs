@@ -17,7 +17,7 @@ namespace Bloomify.Repositories
                    .Include(o => o.OrderItems)
                        .ThenInclude(oi => oi.Products)
                    .Include(o => o.ShippingDetails)
-                   .Include(o => o.Users)
+                   .Include(o => o.User)
                    .FirstOrDefault(o => o.OrderID == orderID);
         }
 
@@ -29,7 +29,7 @@ namespace Bloomify.Repositories
         public IEnumerable<Order> GetAllOrders()
         {
             return _context.Orders
-                .Include(o => o.Users)
+                .Include(o => o.User)
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.Products)
                 .Include(o => o.ShippingDetails)

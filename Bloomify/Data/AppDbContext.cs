@@ -36,7 +36,7 @@ namespace Bloomify.Data
 
             // Configure relationships for Identity-related entities
             modelBuilder.Entity<Order>()
-                .HasOne(o => o.Users)
+                .HasOne(o => o.User)
                 .WithMany(u => u.Orders)
                 .HasForeignKey(o => o.userID)
                 .OnDelete(DeleteBehavior.Cascade);

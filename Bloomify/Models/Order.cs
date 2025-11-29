@@ -9,7 +9,7 @@ namespace Bloomify.Models
         public String Status { get; set; }
 
         public int userID { get; set; }
-        public BloomifyUser? Users { get; set; }
+        public BloomifyUser? User { get; set; }
 
         public ICollection<OrderItem>? OrderItems { get; set; }
         public ICollection<ShippingDetail>? ShippingDetails { get; set; }
