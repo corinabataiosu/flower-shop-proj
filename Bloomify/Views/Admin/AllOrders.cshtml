@@ -1,0 +1,101 @@
+﻿@model IEnumerable<Bloomify.Models.Order>
+@{
+    ViewData["Title"] = "All Orders";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4">@ViewData["Title"]</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Total Price</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            var orderStatus = order.Status?.Trim().ToLower();
+                            <tr>
+                                <td>@order.OrderID</td>
+                                <td>@order.User?.Name</td>
+                                <td>@order.TotalPrice.ToString("0.00")</td>
+                                <td>
+                                    <span class="badge bg-@(orderStatus switch {
+                                        "pending" => "warning",
+                                        "processing" => "info",
+                                        "shipped" => "primary",
+                                        "delivered" => "success",
+                                        _ => "secondary"
+                                    })">@order.Status</span>
+                                </td>
+                                <td>
+                                    @if (orderStatus == "pending")
+                                    {
+                                        <form asp-action="UpdateOrderStatus" method="post" class="d-inline">
+                                            <input type="hidden" name="orderId" value="@order.OrderID" />
+                                            <input type="hidden" name="status" value="processing" />
+                                            <button type="submit" class="btn btn-sm btn-info">Mark as Processing</button>
+                                        </form>
+                                    }
+                                    else if (orderStatus == "processing")
+                                    {
+                                        <form asp-action="UpdateOrderStatus" method="post" class="d-inline">
+                                            <input type="hidden" name="orderId" value="@order.OrderID" />
+                                            <input type="hidden" name="status" value="shipped" />
+                                            <button type="submit" class="btn btn-sm btn-primary">Mark as Shipped</button>
+                                        </form>
+                                    }
+                                    else if (orderStatus == "shipped")
+                                    {
+                                        <form asp-action="UpdateOrderStatus" method="post" class="d-inline">
+                                            <input type="hidden" name="orderId" value="@order.OrderID" />
+                                            <input type="hidden" name="status" value="delivered" />
+                                            <button type="submit" class="btn btn-sm btn-success">Mark as Delivered</button>
+                                        </form>
+                                    }
+                                    else if (orderStatus == "delivered")
+                                    {
+                                        <span class="text-muted">Order Delivered</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dropdowns = document.querySelectorAll('.dropdown');
+        dropdowns.forEach(dropdown => {
+            const button = dropdown.querySelector('button');
+            const menu = dropdown.querySelector('.dropdown-menu');
+
+            button.addEventListener('click', function() {
+                const rect = button.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+
+                if (rect.bottom + 150 > windowHeight) {
+                    menu.classList.add('dropdown-menu-up');
+                    menu.style.bottom = '100%';
+                    menu.style.top = 'auto';
+                } else {
+                    menu.classList.remove('dropdown-menu-up');
+                    menu.style.bottom = 'auto';
+                    menu.style.top = '100%';
+                }
+            });
+        });
+    });
+</script>

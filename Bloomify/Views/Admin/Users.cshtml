@@ -1,0 +1,53 @@
+﻿@model List<Bloomify.Controllers.UserViewModel>
+@{
+    ViewData["Title"] = "Users Management";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4">@ViewData["Title"]</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                            <th>Roles</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>@user.Name</td>
+                                <td>@user.Email</td>
+                                <td>@(user.PhoneNumber ?? "Not set")</td>
+                                <td>@(user.Address ?? "Not set")</td>
+                                <td>
+                                    @foreach (var role in user.Roles)
+                                    {
+                                        <span class="badge bg-primary me-1">@role</span>
+                                    }
+                                </td>
+                                <td>
+                                    <form asp-action="ToggleUserRole" method="post" class="d-inline">
+                                        <input type="hidden" name="userId" value="@user.Id" />
+                                        <input type="hidden" name="role" value="Admin" />
+                                        <button type="submit" class="btn btn-sm @(user.Roles.Contains("Admin") ? "btn-danger" : "btn-success")">
+                                            @(user.Roles.Contains("Admin") ? "Remove Admin" : "Make Admin")
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div> 
