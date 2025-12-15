@@ -63,6 +63,7 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IProviderService, ProviderService>();
+builder.Services.AddScoped<IWishlistService, WishlistService>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();

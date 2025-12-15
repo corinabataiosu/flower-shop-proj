@@ -39,11 +39,19 @@
             <div class="product-details">
                 <h3>@product.ProductName</h3>
                 <p class="product-price">@string.Format("${0:0.00}", product.Price)</p>
-                <form asp-action="AddToCart" asp-controller="ShoppingCart" method="post">
-                    <input type="hidden" name="productId" value="@product.ProductID" />
-                    <input type="hidden" name="quantity" value="1" />
-                    <button type="submit" class="btn btn-success w-100">Add to Cart</button>
-                </form>
+                <div class="d-flex gap-2">
+                    <form asp-action="AddToCart" asp-controller="ShoppingCart" method="post">
+                        <input type="hidden" name="productId" value="@product.ProductID" />
+                        <input type="hidden" name="quantity" value="1" />
+                        <button type="submit" class="btn btn-success w-100">Add to Cart</button>
+                    </form>
+                    <form asp-action="AddToWishlist" asp-controller="Wishlist" method="post">
+                        <input type="hidden" name="productId" value="@product.ProductID" />
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     }

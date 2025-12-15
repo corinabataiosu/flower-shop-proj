@@ -24,6 +24,8 @@ namespace Bloomify.Data
         public DbSet<ShippingDetail> ShippingDetails { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
+        public DbSet<Wishlist> Wishlists { get; set; }
+        public DbSet<WishlistItem> WishlistItems { get; set; }
 
         // Reference to old User table for migration purposes
         // Remove this after migration is complete
@@ -57,6 +59,12 @@ namespace Bloomify.Data
                 .HasOne(sc => sc.Users)
                 .WithMany()
                 .HasForeignKey(sc => sc.userID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Wishlist>()
+                .HasOne(w => w.User)
+                .WithMany()
+                .HasForeignKey(w => w.UserID)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Seed data

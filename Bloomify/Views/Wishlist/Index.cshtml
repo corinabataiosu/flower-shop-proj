@@ -1,0 +1,58 @@
+@model Bloomify.Models.Wishlist
+
+@{
+    ViewData["Title"] = "My Wishlist";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4">My Wishlist</h2>
+
+    @if (Model == null || Model.WishlistItems == null || !Model.WishlistItems.Any())
+    {
+        <div class="text-center py-5">
+            <h4 class="mb-3">Your wishlist is empty</h4>
+            <p class="text-muted mb-4">Looks like you haven't added anything to your list yet.</p>
+            <a href="@Url.Action("Index", "Store")" class="btn btn-lg">Continue Shopping</a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var item in Model.WishlistItems)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 w-50 shadow-sm">
+                        @if (!string.IsNullOrEmpty(item.Product?.ImagePath))
+                        {
+                            <img src="@item.Product.ImagePath" class="product-image justify-content-center" alt="@item.Product.ProductName" style="height: 200px; object-fit: cover; width: 100%">
+                        }
+                        else
+                        {
+                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <span class="text-muted"><i class="fas fa-image fa-2x"></i></span>
+                            </div>
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Product?.ProductName</h5>
+                            <p class="card-text text-primary fw-bold">$@item.Product?.Price</p>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 d-flex justify-content-between">
+                            <form asp-action="MoveToCart" method="post" class="d-inline">
+                                <input type="hidden" name="itemId" value="@item.WishlistItemID" />
+                                <button type="submit" class="btn btn-success btn-sm">
+                                    <i class="fas fa-shopping-cart"></i> Move to Cart
+                                </button>
+                            </form>
+                            <form asp-action="RemoveFromWishlist" method="post" class="d-inline">
+                                <input type="hidden" name="productId" value="@item.ProductID" />
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

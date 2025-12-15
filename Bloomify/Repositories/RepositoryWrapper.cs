@@ -18,6 +18,8 @@ namespace Bloomify.Repositories
         private IShoppingCartRepository _shoppingCart;
         private IShoppingCartItemRepository _shoppingCartItem;
         private IUserRepository _user;
+        private IWishlistRepository? _wishlist;
+        private IWishlistItemRepository? _wishlistItem;
         private readonly UserManager<BloomifyUser> _userManager;
         private readonly RoleManager<IdentityRole<int>> _roleManager;
 
@@ -143,6 +145,29 @@ namespace Bloomify.Repositories
                     _user = new UserRepository(_userManager, _roleManager);
                 }
                 return _user;
+            }
+        }
+        public IWishlistRepository WishlistRepository
+        {
+            get
+            {
+                if (_wishlist == null)
+                {
+                    _wishlist = new WishlistRepository(_context);
+                }
+                return _wishlist;
+            }
+        }
+
+        public IWishlistItemRepository WishlistItemRepository
+        {
+            get
+            {
+                if (_wishlistItem == null)
+                {
+                    _wishlistItem = new WishlistItemRepository(_context);
+                }
+                return _wishlistItem;
             }
         }
 

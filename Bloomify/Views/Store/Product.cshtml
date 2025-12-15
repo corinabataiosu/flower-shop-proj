@@ -24,9 +24,13 @@
                 <input type="hidden" name="productId" value="@Model.ProductID" />
                 <div class="mb-3">
                     <label for="quantity" class="form-label">Quantity:</label>
-                    <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control" style="max-width: 100px;" />
+                    <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control"
+                        style="max-width: 100px;" />
                 </div>
-                <button type="submit" class="btn btn-lg">Add to Cart</button>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-lg btn-success">Add to Cart</button>
+                    <button type="submit" formaction="@Url.Action("AddToWishlist", "Wishlist")" class="btn btn-lg btn-outline-danger">Add to wishlist</button>
+                </div>
             </form>
         </div>
     </div>

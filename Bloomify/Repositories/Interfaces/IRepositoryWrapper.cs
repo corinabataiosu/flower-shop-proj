@@ -9,6 +9,8 @@
         IOrderItemRepository OrderItemRepository { get; }
         IShoppingCartRepository ShoppingCartRepository { get; }
         IShoppingCartItemRepository ShoppingCartItemRepository { get; }
+        IWishlistRepository WishlistRepository { get; }
+        IWishlistItemRepository WishlistItemRepository { get; }
         IUserRepository UserRepository { get; }
         IReviewRepository ReviewRepository { get; }
         void Save();
