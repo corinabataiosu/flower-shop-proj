@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿  using Microsoft.AspNetCore.Mvc;
 using Bloomify.Models;
 using Bloomify.Data;
 using Bloomify.Services;
@@ -185,7 +185,7 @@ namespace Bloomify.Controllers
 
             _orderService.CreateOrder(order); 
 
-            _shoppingCartService.ClearShoppingCart(1);
+            _shoppingCartService.ClearShoppingCart(userId);
 
             return RedirectToAction("OrderConfirmation", new { id = order.OrderID });
         }

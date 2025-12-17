@@ -24,6 +24,63 @@
         </div>
     </div>
 
+    <div class="card mb-5">
+        <div class="card-header bg-light">
+            <h3 class="mb-0">Order Details</h3>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderItems)
+                        {
+                            <tr>
+                                <td>@item.Products.ProductName</td>
+                                <td>@item.Quantity</td>
+                                <td> @item.Price.ToString("0.00") EUR</td>
+                                <td> @((item.Quantity * item.Price).ToString("0.00")) EUR</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-5">
+        <div class="card-header bg-light">
+            <h3 class="mb-0">Shipping Details</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-2"><strong>Address:</strong> @Model.ShippingDetails.FirstOrDefault()?.Address</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-2"><strong>Postal Code:</strong> @Model.ShippingDetails.FirstOrDefault()?.PostalCode</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-5">
+        <div class="card-header bg-light">
+            <h3 class="mb-0">Customer Details</h3>
+        </div>
+        <div class="card-body">
+            <p class="mb-2"><strong>Full Name:</strong> @Model.User?.Name</p>
+            <p class="mb-2"><strong>Phone Number:</strong> @Model.User?.PhoneNumber</p>
+        </div>
+    </div>
+
     <div class="text-center">
         <a href="@Url.Action("Index", "Home")" class="btn btn-lg">Continue Shopping</a>
     </div>

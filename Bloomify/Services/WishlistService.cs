@@ -85,6 +85,7 @@ namespace Bloomify.Services
         {
             var item = _repositoryWrapper.WishlistItemRepository
                 .FindByCondition(i => i.WishlistItemID == itemId)
+                .AsTracking()
                 .Include(i => i.Product)
                 .FirstOrDefault();
 

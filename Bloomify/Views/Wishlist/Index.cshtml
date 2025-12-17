@@ -17,14 +17,15 @@
     }
     else
     {
-        <div class="row">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">
             @foreach (var item in Model.WishlistItems)
             {
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 w-50 shadow-sm">
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
                         @if (!string.IsNullOrEmpty(item.Product?.ImagePath))
                         {
-                            <img src="@item.Product.ImagePath" class="product-image justify-content-center" alt="@item.Product.ProductName" style="height: 200px; object-fit: cover; width: 100%">
+                            <img src="@item.Product.ImagePath" class="card-img-top" alt="@item.Product.ProductName"
+                                style="height: 200px; object-fit: cover;">
                         }
                         else
                         {
@@ -33,20 +34,21 @@
                             </div>
                         }
                         <div class="card-body">
-                            <h5 class="card-title">@item.Product?.ProductName</h5>
+                            <h5 class="card-title text-truncate" title="@item.Product?.ProductName">@item.Product?.ProductName
+                            </h5>
                             <p class="card-text text-primary fw-bold">$@item.Product?.Price</p>
                         </div>
                         <div class="card-footer bg-white border-top-0 d-flex justify-content-between">
                             <form asp-action="MoveToCart" method="post" class="d-inline">
                                 <input type="hidden" name="itemId" value="@item.WishlistItemID" />
-                                <button type="submit" class="btn btn-success btn-sm">
-                                    <i class="fas fa-shopping-cart"></i> Move to Cart
+                                <button type="submit" class="btn btn-success btn-sm" title="Move to Cart">
+                                    <i class="fas fa-shopping-cart"></i>
                                 </button>
                             </form>
                             <form asp-action="RemoveFromWishlist" method="post" class="d-inline">
                                 <input type="hidden" name="productId" value="@item.ProductID" />
-                                <button type="submit" class="btn btn-outline-danger btn-sm">
-                                    <i class="fas fa-trash"></i> Remove
+                                <button type="submit" class="btn btn-outline-danger btn-sm" title="Remove">
+                                    <i class="fas fa-trash"></i>
                                 </button>
                             </form>
                         </div>
