@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Bloomify.Data;
 using Bloomify.Models;
 using Bloomify.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Bloomify.Controllers
 {
@@ -77,11 +79,83 @@ namespace Bloomify.Controllers
                 return NotFound();
             }
 
-            var reviews = _reviewService.GetReviewsByProductId(id);
+            var reviews = _reviewService.GetReviewsForProduct(id);
             ViewData["Reviews"] = reviews;
             //ViewBag.Reviews = reviews;
 
             return View(product); 
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult AddReview(int productId, int rating, string comment)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { success = false, message = "Invalid review data." });
+            }
+
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            // Check if user already has a review for this product
+            var existingReview = _reviewService.GetReviewsForProduct(productId)
+                .FirstOrDefault(r => r.UserID == userId);
+
+            if (existingReview != null)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "You have already reviewed this product. You can edit your existing review."
+                });
+            }
+
+            var review = new Review
+            {
+                ProductID = productId,
+                UserID = userId,
+                Rating = rating,
+                Comment = comment
+            };
+
+            _reviewService.AddReview(review);
+            return Json(new
+            {
+                success = true,
+                message = "Your review has been added successfully!",
+                isUpdate = false
+            });
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult UpdateReview(int id, int rating, string comment)
+        {
+            var review = _reviewService.GetReviewById(id);
+            if (review == null)
+            {
+                return Json(new { success = false, message = "Review not found." });
+            }
+
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            if (review.UserID != userId)
+            {
+                return Json(new { success = false, message = "You are not authorized to edit this review." });
+            }
+
+            review.Rating = rating;
+            review.Comment = comment;
+            _reviewService.UpdateReview(review);
+
+            return Json(new
+            {
+                success = true,
+                message = "Your review has been updated successfully!",
+                isUpdate = true,
+                reviewId = review.ReviewID,
+                rating = review.Rating,
+                comment = review.Comment
+            });
         }
     }
 }

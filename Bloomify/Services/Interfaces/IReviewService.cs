@@ -6,6 +6,7 @@ namespace Bloomify.Services.Interfaces
     {
         IEnumerable<Review> GetReviewsForProduct(int productID);
         void AddReview(Review review);
-        List<Review> GetReviewsByProductId(int productId);
+        Review GetReviewById(int reviewId);
+        void UpdateReview(Review review);
     }
 }

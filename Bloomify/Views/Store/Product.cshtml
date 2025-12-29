@@ -34,4 +34,152 @@
             </form>
         </div>
     </div>
+
+    <hr />
+
+    <div class="product-reviews">
+        <h3 class="mb-4">Reviews:</h3>
+
+        <div id="reviewMessage" class="alert d-none mb-4"></div>
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Write a Review</h5>
+                    <form id="reviewForm" asp-controller="Store" asp-action="AddReview" method="post">
+                        <input type="hidden" name="productId" value="@Model.ProductID" />
+                        <div class="mb-3">
+                            <label for="rating" class="form-label">Rating:</label>
+                            <select name="rating" id="rating" class="form-select" required style="max-width: 200px;">
+                                <option value="">Select rating</option>
+                                <option value="1">1 - Poor</option>
+                                <option value="2">2 - Fair</option>
+                                <option value="3">3 - Good</option>
+                                <option value="4">4 - Very Good</option>
+                                <option value="5">5 - Excellent</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="comment" class="form-label">Your Review:</label>
+                            <textarea name="comment" id="comment" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                    </form>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info mb-4">
+                Please <a asp-controller="MyAccount" asp-action="Login">login</a> to write a review.
+            </div>
+        }
+
+        <div id="reviewsList">
+            @if (reviews != null && reviews.Any())
+            {
+                <div class="row">
+                    @foreach (var review in reviews)
+                    {
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <h5 class="card-title mb-0">@review.Users?.Name</h5>
+                                        <span class="badge bg-secondary">Rating: @review.Rating/5</span>
+                                    </div>
+                                    <hr />
+                                    <p class="card-text">@review.Comment</p>
+                                    @if (User.Identity.IsAuthenticated && User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value == review.UserID.ToString())
+                                    {
+                                        <div class="mt-2">
+                                            <button class="btn btn-sm btn-outline-secondary edit-review"
+                                                    data-review-id="@review.ReviewID"
+                                                    data-rating="@review.Rating"
+                                                    data-comment="@review.Comment">
+                                                Edit
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-light text-center p-4">
+                    <i class="fas fa-comment-slash fa-2x mb-3"></i>
+                    <p class="mb-0">This product doesn't have any reviews yet.</p>
+                </div>
+            }
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            function showMessage(message, type) {
+                const messageDiv = $('#reviewMessage');
+                messageDiv.removeClass('d-none alert-success alert-danger')
+                    .addClass('alert-' + type)
+                    .text(message)
+                    .show();
+
+                setTimeout(() => {
+                    messageDiv.fadeOut();
+                }, 5000);
+            }
+
+            $('#reviewForm').on('submit', function(e) {
+                e.preventDefault();
+                const form = $(this);
+                const url = form.attr('action');
+                const method = form.attr('method');
+                const data = form.serialize();
+
+                $.ajax({
+                    url: url,
+                    type: method,
+                    data: data,
+                    success: function(response) {
+                        if (response.success) {
+                            showMessage(response.message, 'success');
+                            if (response.isUpdate) {
+                                const reviewCard = $(`.edit-review[data-review-id="${response.reviewId}"]`).closest('.card');
+                                reviewCard.find('.badge').text(`Rating: ${response.rating}/5`);
+                                reviewCard.find('.card-text').text(response.comment);
+                            } else {
+                                location.reload(); 
+                            }
+                            form[0].reset();
+                        } else {
+                            showMessage(response.message, 'danger');
+                        }
+                    },
+                    error: function() {
+                        showMessage('An error occurred while submitting your review.', 'danger');
+                    }
+                });
+            });
+
+            $('.edit-review').click(function() {
+                const reviewId = $(this).data('review-id');
+                const rating = $(this).data('rating');
+                const comment = $(this).data('comment');
+
+                $('#rating').val(rating);
+                $('#comment').val(comment);
+
+                $('#reviewForm').attr('action', '/Store/UpdateReview/' + reviewId);
+
+                $('html, body').animate({
+                    scrollTop: $('#reviewForm').offset().top - 100
+                }, 500);
+            });
+        });
+    </script>
+}

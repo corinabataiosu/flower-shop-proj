@@ -22,12 +22,15 @@ namespace Bloomify.Services
             _repositoryWrapper.Save();
         }
 
-        public List<Review> GetReviewsByProductId(int productId)
+        public Review GetReviewById(int reviewId)
         {
-            return _repositoryWrapper.ReviewRepository
-                .FindByCondition(r => r.ProductID == productId)
-                .Include(r => r.Products) // ???????????????????????????????????????????
-                .ToList();
+            return _repositoryWrapper.ReviewRepository.GetReviewById(reviewId);
+        }
+
+        public void UpdateReview(Review review)
+        {
+            _repositoryWrapper.ReviewRepository.UpdateReview(review);
+            _repositoryWrapper.Save();
         }
     }
 }
